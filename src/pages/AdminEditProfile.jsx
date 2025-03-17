@@ -50,31 +50,47 @@ const AdminEditProfile = () => {
     };
 
     const handleSubmit = async (e) => {
-        e.preventDefault();
+    e.preventDefault();
 
-        if (user.password !== user.confirmPassword) {
-            setMessage("Passwords do not match.");
+    if (user.password !== user.confirmPassword) {
+        setMessage("Passwords do not match.");
+        return;
+    }
+
+    const isConfirmed = window.confirm("Are you sure you want to save the changes?");
+    if (!isConfirmed) return;
+
+    try {
+        const token = localStorage.getItem("adminToken"); // Get token from localStorage
+
+        if (!token) {
+            console.error("No token found.");
+            setMessage("Unauthorized: Please log in again.");
             return;
         }
 
-        const isConfirmed = window.confirm("Are you sure you want to save the changes?");
-        if (!isConfirmed) return;
+        await API.put(
+            "/api/users/editprofile",
+            {
+                username: user.username,
+                email: user.email,
+                password: user.password,
+            },
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`, // Send token in headers
+                },
+                withCredentials: true,
+            }
+        );
 
-        try {
-            await API.put(
-                "/api/users/editprofile",
-                { username: user.username, email: user.email, password: user.password },
-                { withCredentials: true }
-            );
-
-            toast.success("Profile updated successfully.");
-            navigate("/admin/productlist");
-
-        } catch (error) {
-            console.error("Update error:", error);
-            setMessage("Error updating profile.");
-        }
-    };
+        toast.success("Profile updated successfully.");
+        navigate("/admin/productlist");
+    } catch (error) {
+        setMessage("Error updating profile.");
+        console.error("Update error:", error.response?.data || error);
+    }
+};
 
     return (
         <div className="flex justify-center">

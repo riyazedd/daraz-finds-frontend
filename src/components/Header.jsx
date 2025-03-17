@@ -95,7 +95,7 @@ const Header = () => {
 							{category.map((x) => (
 								<li key={x._id}>
 									<Link
-										to={`/category/${x.name}`}
+										to={`/category/${x._id}`}
 										onClick={() => {
 											setMenu(x.name);
 											setIsOpen(false);

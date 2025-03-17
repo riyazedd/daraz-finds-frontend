@@ -1,8 +1,10 @@
 import axios from "axios";
+import dotenv from "dotenv";
+dotenv.config();
 
 export const fetchImage = async (productLink) => {
   try {
-    const response = await axios.get("http://localhost:3000/scrape-image", {
+    const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/scrape-image`, {
       params: { url: productLink },
     });
 

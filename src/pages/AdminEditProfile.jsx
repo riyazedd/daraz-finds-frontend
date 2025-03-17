@@ -17,7 +17,8 @@ const AdminEditProfile = () => {
     useEffect(() => {
     const fetchUserProfile = async () => {
         try {
-            const token = localStorage.getItem("token"); // Get token from local storage
+            const token = localStorage.getItem("adminToken"); // Get token from localStorage
+            console.log(token)
             if (!token) {
                 console.error("No token found.");
                 setMessage("Unauthorized: Please log in again.");
@@ -25,8 +26,8 @@ const AdminEditProfile = () => {
             }
 
             const { data } = await API.get("/api/users/profile", {
-                headers: { Authorization: `Bearer ${token}` },
-                withCredentials: true,
+                headers: { Authorization: `Bearer ${token}` }, // Send token in headers
+                withCredentials: true, // Ensure credentials are sent
             });
 
             setUser({

@@ -20,7 +20,7 @@ const Header = () => {
 		<>
 			{/* Banner Section */}
 			<div className="w-full relative">
-				<img src="banner.jpg" alt="banner" className="w-full" />
+				<img src="star.jpg" alt="banner" className="w-full" />
 				<div className="flex flex-col gap-3 items-center justify-center w-full text-white absolute left-0 lg:top-90 top-20">
 					<img src="profile.png" alt="profile" className="w-40 rounded-lg" />
 					<h1 className="text-2xl font-semibold">daraznepalfinds</h1>

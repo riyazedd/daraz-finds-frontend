@@ -18,7 +18,7 @@ const HomePage = () => {
 
   return (
     <div className="text-white"> {/* Added padding for better spacing */}
-      <div className="w-full grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-5">
+      <div className="w-full grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-x-13 gap-y-7">
         {products.map(product => (
           <Card key={product._id} product={product} />
         ))}

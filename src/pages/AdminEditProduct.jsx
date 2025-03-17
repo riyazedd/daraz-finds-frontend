@@ -84,17 +84,19 @@ const AdminEditProduct = () => {
   };
 
   return (
-    <div>
+    <div className="p-4 md:p-8">
       <div className="mb-4">
         <Link to="/admin/productlist" className="underline text-gray-500">
           &larr; Go Back
         </Link>
       </div>
 
-      <h1 className="md:text-3xl text-2xl font-semibold">Edit Product Details</h1>
+      <h1 className="md:text-3xl text-2xl font-semibold text-center md:text-left">
+        Edit Product Details
+      </h1>
 
-      <div className="flex w-full gap-10">
-        <div className="bg-white border rounded-lg shadow relative mt-10 w-1/2">
+      <div className="flex flex-col md:flex-row w-full gap-10">
+        <div className="bg-white border rounded-lg shadow relative mt-10 w-full md:w-1/2">
           <div className="p-6 space-y-6">
             <form onSubmit={handleSubmit}>
               <div className="flex flex-col">
@@ -142,7 +144,7 @@ const AdminEditProduct = () => {
               </div>
           <div className="p-6 border-t border-gray-200 rounded-b">
             <button
-              className="hover:cursor-pointer text-white bg-cyan-600 hover:bg-cyan-700 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+              className="hover:cursor-pointer text-white bg-cyan-600 hover:bg-cyan-700 font-medium rounded-lg text-sm px-5 py-2.5 text-center w-full md:w-auto"
               type="submit"
             >
               Save Changes
@@ -152,7 +154,7 @@ const AdminEditProduct = () => {
           </div>
 
         </div>
-        <div className="mt-10">
+        <div className="mt-10 flex justify-center md:justify-start">
           {loading ? (
             <p className="text-gray-500">Loading image...</p>
           ) : error ? (

@@ -18,7 +18,7 @@ const AdminEditProfile = () => {
     const fetchUserProfile = async () => {
         try {
             const token = localStorage.getItem("adminToken"); // Get token from localStorage
-            console.log(token)
+            // console.log(token)
             if (!token) {
                 console.error("No token found.");
                 setMessage("Unauthorized: Please log in again.");

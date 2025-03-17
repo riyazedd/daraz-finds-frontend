@@ -15,17 +15,34 @@ const AdminEditProfile = () => {
     const [message, setMessage] = useState("");
 
     useEffect(() => {
-        const fetchUserProfile = async () => {
-            try {
-                const { data } = await API.get("/api/users/profile", { withCredentials: true });
-                setUser({ username: data.username, email: data.email, password: "", confirmPassword: "" });
-            } catch (error) {
-                console.error("Error fetching user profile:", error);
-                setMessage("Failed to load profile.");
+    const fetchUserProfile = async () => {
+        try {
+            const token = localStorage.getItem("token"); // Get token from local storage
+            if (!token) {
+                console.error("No token found.");
+                setMessage("Unauthorized: Please log in again.");
+                return;
             }
-        };
-        fetchUserProfile();
-    }, []);
+
+            const { data } = await API.get("/api/users/profile", {
+                headers: { Authorization: `Bearer ${token}` },
+                withCredentials: true,
+            });
+
+            setUser({
+                username: data.username,
+                email: data.email,
+                password: "",
+                confirmPassword: "",
+            });
+        } catch (error) {
+            console.error("Error fetching user profile:", error);
+            setMessage("Failed to load profile.");
+        }
+    };
+
+    fetchUserProfile();
+}, []);
 
     const handleChange = (e) => {
         setUser({ ...user, [e.target.name]: e.target.value });

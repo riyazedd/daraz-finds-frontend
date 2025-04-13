@@ -2,17 +2,27 @@ import axios from "axios";
 
 export const fetchImage = async (productLink) => {
   try {
-    const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/scrape-image`, {
-      params: { url: productLink },
-    });
-
-    if (response.data.imageUrl) {
-      return { imageUrl: response.data.imageUrl, error: null };
-    } else {
-      return { imageUrl: "", error: "Image not found" };
+    // Double encode the URL for proper transmission
+    const encodedURL = encodeURIComponent(encodeURIComponent(productLink));
+    const response = await axios.get(
+      `${import.meta.env.VITE_BACKEND_URL}/scrape-image?url=${encodedURL}`
+    );
+    
+    // Handle empty responses
+    if (!response.data.imageUrl) {
+      throw new Error('Image URL not found in response');
     }
+    
+    return { 
+      imageUrl: response.data.imageUrl, 
+      error: null 
+    };
+    
   } catch (err) {
-    console.error(err);
-    return { imageUrl: "", error: "Failed to fetch image" };
+    console.error('Fetch Error:', err);
+    return { 
+      imageUrl: "", 
+      error: err.response?.data?.error || 'Failed to fetch image' 
+    };
   }
 };

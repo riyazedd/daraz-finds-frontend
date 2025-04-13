@@ -26,7 +26,7 @@ const Header = () => {
 					<h1 className="text-2xl font-semibold">daraznepalfinds</h1>
 					<p className="text-lg">Discover the best Daraz finds</p>
 					<div className="flex gap-5 text-3xl">
-						<a href="https://www.instagram.com/daraz.nepal.finds/" target="_blank" rel="noopener noreferrer">
+						<a href="https://www.instagram.com/daraz.npfinds?igsh=MWpyM3h4dnd2bnRxag%3D%3D" target="_blank" rel="noopener noreferrer">
 							<FaInstagram />
 						</a>
 						<a href="https://www.youtube.com/@Daraznepalfinds" target="_blank" rel="noopener noreferrer">

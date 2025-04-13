@@ -16,7 +16,7 @@ const CategoryPage = () => {
     setLoading(true);
     API.get( '/api/products')
       .then((res) => {
-        console.log("Fetched Products:", res.data);
+        // console.log("Fetched Products:", res.data);
         setProducts(res.data);
       })
       .catch((err) => console.error("Error fetching products:", err))

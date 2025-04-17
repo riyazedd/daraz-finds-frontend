@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import API from "../API";
-import { FaEdit, FaTrash, FaPlus } from "react-icons/fa";
-import { fetchImage } from "../utils/productImage.js"; 
+import { FaEdit, FaTrash, FaPlus } from "react-icons/fa"; 
 
 const AdminProductList = () => {
   const [products, setProducts] = useState([]);
   const [categories, setCategory] = useState([]);
-  const [images, setImages] = useState({});
+  // const [images, setImages] = useState({});
 
   useEffect(() => {
     try {
@@ -24,20 +23,6 @@ const AdminProductList = () => {
   }, []);
 
  
-  useEffect(() => {
-    const loadImages = async () => {
-      const imageMap = {};
-      for (const product of products) {
-        const { imageUrl } = await fetchImage(product.product_link);
-        imageMap[product._id] = imageUrl;
-      }
-      setImages(imageMap);
-    };
-
-    if (products.length > 0) {
-      loadImages();
-    }
-  }, [products]);
 
   const getCategoryName = (catId) => {
     const category = categories.find((cat) => cat._id === catId);
@@ -95,15 +80,12 @@ const AdminProductList = () => {
                     {product._id}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    {images[product._id] ? (
+                    
                       <img
-                        src={images[product._id]}
+                        src={product.image}
                         alt="product"
                         className="w-10 h-10 object-cover"
                       />
-                    ) : (
-                      <p className="text-gray-400">Loading...</p>
-                    )}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap max-w-xs truncate">
                     <a

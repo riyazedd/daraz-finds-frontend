@@ -1,71 +1,60 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import API from "../API";
-import { fetchImage } from "../utils/productImage.js"; // ✅ Import utility function
 
 const AdminAddProducts = () => {
   const [categories, setCategory] = useState([]);
   const [productLink, setProductLink] = useState("");
   const [categoryId, setCategoryId] = useState("");
-  const [imageUrl, setImageUrl] = useState("/sampleProduct.jpg");
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [image, setImage] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
 
   useEffect(() => {
-    try {
-      API.get("/api/category").then((res) => {
+    API.get("/api/category")
+      .then((res) => {
         setCategory(res.data);
+      })
+      .catch((err) => {
+        console.error("Error fetching categories:", err.message);
       });
-    } catch (err) {
-      console.error(err.message);
-    }
   }, []);
 
-  const handleImageFetch = async (link) => {
-    if (!link) return;
-    setLoading(true);
-    setError(null);
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    setImage(file);
 
-    const { imageUrl, error } = await fetchImage(link);
-    if (error) {
-      setError(error);
-      setImageUrl("sampleProduct.jpg"); // Fallback image
-    } else {
-      setImageUrl(imageUrl);
-    }
-
-    setLoading(false);
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setImagePreview(reader.result);
+    };
+    reader.readAsDataURL(file);
   };
 
-  const insertProduct = async (e) => {
+  const insertProduct = (e) => {
     e.preventDefault();
-  
-    try {
-      const response = await API.post(
-        "/api/products",
-        {
-          product_link: productLink,
-          category: categoryId
-        },
-        {
-          headers: { "Content-Type": "application/json" } 
+
+    const data = new FormData();
+    data.append("category", categoryId);
+    data.append("image", image);
+    data.append("product_link", productLink);
+
+    API.post("/api/products", data)
+      .then((res) => {
+        if (res.data.success) {
+          alert("Product Added Successfully");
+          setCategoryId("");
+          setProductLink("");
+          setImage(null);
+          setImagePreview(null);
+        } else {
+          alert("Cannot Add Product");
         }
-      );
-  
-      if (response.data.success) {
-        alert("Product Added Successfully!");
-        setProductLink("");
-        setCategoryId("");
-        setImageUrl("/sampleProduct.jpg");
-      } else {
-        alert("Cannot add product!");
-      }
-    } catch (err) {
-      console.error("Error adding product:", err.response?.data || err.message);
-      alert("Error adding product: " + err.response?.data?.message || err.message);
-    }
+      })
+      .catch((err) => {
+        console.error("Product upload failed:", err);
+      });
   };
-  
+
   return (
     <div className="p-4 md:p-8">
       {/* Back Link */}
@@ -79,7 +68,6 @@ const AdminAddProducts = () => {
 
       {/* Responsive Layout */}
       <div className="flex flex-col md:flex-row gap-10">
-        
         {/* Form Section */}
         <div className="bg-white border rounded-lg shadow p-6 w-full md:w-1/2">
           <form onSubmit={insertProduct} className="space-y-6">
@@ -91,10 +79,7 @@ const AdminAddProducts = () => {
                 type="text"
                 id="product-link"
                 value={productLink}
-                onChange={(e) => {
-                  setProductLink(e.target.value);
-                  handleImageFetch(e.target.value);
-                }}
+                onChange={(e) => setProductLink(e.target.value)}
                 className="w-full p-2.5 border rounded-lg bg-gray-50 shadow-sm text-gray-900"
                 placeholder="https://www.daraz.com.np/sample-product"
                 required
@@ -107,6 +92,7 @@ const AdminAddProducts = () => {
               </label>
               <select
                 id="category"
+                value={categoryId}
                 onChange={(e) => setCategoryId(e.target.value)}
                 className="w-full p-2.5 border rounded-lg bg-gray-50 shadow-sm text-gray-900"
                 required
@@ -120,6 +106,20 @@ const AdminAddProducts = () => {
               </select>
             </div>
 
+            <div>
+              <label htmlFor="image" className="text-sm font-medium text-gray-900 block mb-2">
+                Upload Image
+              </label>
+              <input
+                type="file"
+                id="image"
+                accept="image/*"
+                onChange={handleImageChange}
+                className="w-full p-2.5 border rounded-lg bg-gray-50 shadow-sm text-gray-900"
+                required
+              />
+            </div>
+
             <button
               className="w-full md:w-auto px-5 py-2.5 text-white bg-cyan-600 hover:bg-cyan-700 rounded-lg font-medium"
               type="submit"
@@ -129,17 +129,14 @@ const AdminAddProducts = () => {
           </form>
         </div>
 
-        {/* Image Section */}
-        <div className="flex flex-col items-center">
-          {loading ? (
-            <p className="text-gray-500">Loading image...</p>
-          ) : error ? (
-            <p className="text-red-500">{error}</p>
+        {/* Image Preview Section */}
+        <div className="flex flex-col items-center justify-center">
+          {imagePreview ? (
+            <img src={imagePreview} alt="Preview" className="w-40 h-40 object-cover rounded-md" />
           ) : (
-            <img src={imageUrl} alt="Product" className="w-40 h-40 object-cover rounded-md" />
+            <p className="text-gray-500">Image preview will appear here</p>
           )}
         </div>
-
       </div>
     </div>
   );

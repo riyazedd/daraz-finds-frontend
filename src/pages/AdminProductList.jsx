@@ -29,14 +29,17 @@ const AdminProductList = () => {
     return category ? category.name : "Unknown";
   };
 
-  const remove = (id) => {
-    confirm("Do you want to delete this product?")
-    try {
-      API.delete(`/api/products/${id}`);
-      setProducts(products.filter(product => product._id !== id));
-      alert('Product Deleted Successfully');
-    } catch (err) {
-      console.error(err);
+  const remove = async (id) => {
+    const isConfirmed = window.confirm("Do you want to delete this product?");
+    if (isConfirmed) {
+      try {
+        await API.delete(`/api/products/${id}`);
+        setProducts(products.filter((product) => product._id !== id));
+        alert("Product Deleted Successfully");
+      } catch (err) {
+        console.error("Error deleting product:", err);
+        alert("Failed to delete the product.");
+      }
     }
   };
 

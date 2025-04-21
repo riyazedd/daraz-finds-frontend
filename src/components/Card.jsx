@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
 const Card = ({ product }) => {
-
+  // console.log(product.image)
   return (
     <div className="w-[200px]">
       <a href={product.product_link} target="_blank" rel="noopener noreferrer">
